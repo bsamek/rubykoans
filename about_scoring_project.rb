@@ -30,7 +30,54 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # Your goal is to write the score method.
 
 def score(dice)
-  # You need to write this method
+  score = 0             # total score
+  previous = nil        # the previous value in a sequence
+  in_a_row = 1          # how many we found in a row
+
+  dice.sort!
+
+  dice.each do |value|
+
+    # Add to score for individual dice
+    if value == 1
+      score += 100
+    elsif value == 5
+      score += 50
+    end
+
+    # Check for match to previous
+    if value == previous
+      in_a_row += 1
+    else
+      in_a_row = 1
+    end
+    previous = value # set new previous
+
+    # We found three of a kind
+    if in_a_row == 3
+
+      # Reset row counting
+      in_a_row = 1 
+      previous = nil
+
+      # Add three of a kind to score
+      if value == 1
+        score += 1000
+      else
+        score += 100*value
+      end
+
+      # Subtract extra value from individual dice
+      if value == 1
+        score -= 3*100
+      elsif value == 5
+        score -= 3*50
+      end
+
+    end
+  end
+
+  score
 end
 
 class AboutScoringProject < Neo::Koan
